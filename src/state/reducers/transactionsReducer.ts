@@ -1,24 +1,30 @@
-import { TransactionsState, ActionType, Action } from "../../../types";
+import { TransactionsState, ActionType, Action } from "../../types.d";
 
 const initialState: TransactionsState = {
   transactions: {},
   activeTransactionsID: "",
-  filteredTransactions: {},
+  filteredTransactions: [],
   isFiltered: false,
   filterTerm: "",
 };
 
-const reducer = (state: TransactionsState = initialState, action: Action) => {
+const reducer = (
+  state: TransactionsState = initialState,
+  action: Action
+): TransactionsState => {
   switch (action.type) {
     case ActionType.SET_TRANSACTIONS:
       return {
         ...state,
-        trsnsactions: action.payload,
+        transactions: action.payload,
       };
     case ActionType.SET_ACTIVE_TRANSACTIONS_ID:
+      let isValidID = state.transactions.hasOwnProperty(action.payload);
       return {
         ...state,
-        activeTransactionsID: action.payload,
+        activeTransactionsID: isValidID
+          ? action.payload
+          : state.activeTransactionsID,
       };
     case ActionType.SET_FILTER_TERM:
       return {
@@ -28,17 +34,18 @@ const reducer = (state: TransactionsState = initialState, action: Action) => {
     case ActionType.SET_IS_FILTERED:
       return {
         ...state,
-        isFiltered: state.filterTerm.length !== 0,
+        isFiltered: action.payload,
       };
     case ActionType.GET_FILTERED_TRANSACTIONS:
-      const { isFiltered, transactions, activeTransactionsID, filterTerm } =
+      let { isFiltered, transactions, activeTransactionsID, filterTerm } =
         state;
 
-      const filteredTransactions = isFiltered
-        ? transactions[activeTransactionsID].filter((t) =>
-            t.description.includes(filterTerm)
-          )
-        : state.transactions;
+      let filteredTransactions = isFiltered
+        ? transactions[activeTransactionsID].filter((t) => {
+            let description = t.description.toLowerCase();
+            return description.includes(filterTerm.toLowerCase());
+          })
+        : transactions[activeTransactionsID];
       return {
         ...state,
         filteredTransactions,

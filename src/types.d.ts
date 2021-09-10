@@ -1,4 +1,4 @@
-interface Card {
+export interface Card {
   id: string;
   description: string;
 }
@@ -9,6 +9,7 @@ export interface CardsState {
   cards: Cards;
   selectedId?: string;
 }
+
 export interface Transaction {
   id: string;
   amount: number;
@@ -22,7 +23,7 @@ export interface Transactions {
 export interface TransactionsState {
   transactions: Transactions;
   activeTransactionsID: string;
-  filteredTransactions: Transactions;
+  filteredTransactions: Transaction[];
   isFiltered: boolean;
   filterTerm: string;
 }
@@ -44,7 +45,7 @@ interface SelectCardAction {
 
 interface SetCardsAction {
   type: typeof ActionType.SET_CARDS;
-  payload: Cards[];
+  payload: Cards;
 }
 
 interface SetTransactionsAction {
@@ -62,6 +63,7 @@ interface GetFilteredTransactionsAction {
 }
 interface SetIsFilteredAction {
   type: typeof ActionType.SET_IS_FILTERED;
+  payload: boolean;
 }
 
 interface SetFilterTermAction {
@@ -77,3 +79,11 @@ export type Action =
   | SetFilterTermAction
   | SetIsFilteredAction
   | GetFilteredTransactionsAction;
+
+export interface CardProps {
+  card: Card;
+}
+
+export interface TransactionProps {
+  transaction: Transaction;
+}
