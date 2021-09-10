@@ -47,7 +47,11 @@ const reducer = (
       let filteredTransactions = isFiltered
         ? customerTransactions[activeTransactionsID].filter((t) => {
             let description = t.description.toLowerCase();
-            return description.includes(filterTerm.toLowerCase());
+            let amount = t.amount.toString();
+            return (
+              description.includes(filterTerm.toLowerCase()) ||
+              amount.includes(filterTerm.toLowerCase())
+            );
           })
         : customerTransactions[activeTransactionsID];
       return {
