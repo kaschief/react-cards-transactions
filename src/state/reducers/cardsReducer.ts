@@ -1,7 +1,7 @@
 import { CardsState, ActionType, Action } from "../../types.d";
 
 const initialState: CardsState = {
-  cards: [],
+  customerCards: [],
   selectedId: "",
 };
 
@@ -18,7 +18,7 @@ const reducer = (
     case ActionType.SET_CARDS:
       return {
         ...state,
-        cards: action.payload,
+        customerCards: action.payload,
       };
     default:
       return state;

@@ -3,8 +3,8 @@ import cardsReducer from "./cardsReducer";
 import transactionsReducer from "./transactionsReducer";
 
 const reducers = combineReducers({
-  cards: cardsReducer,
-  transactions: transactionsReducer,
+  customerCards: cardsReducer,
+  customerTransactions: transactionsReducer,
 });
 
 export default reducers;

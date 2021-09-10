@@ -6,7 +6,7 @@ export interface Card {
 export type Cards = Card[];
 
 export interface CardsState {
-  cards: Cards;
+  customerCards: Cards;
   selectedId?: string;
 }
 
@@ -21,7 +21,7 @@ export interface Transactions {
 }
 
 export interface TransactionsState {
-  transactions: Transactions;
+  customerTransactions: Transactions;
   activeTransactionsID: string;
   filteredTransactions: Transaction[];
   isFiltered: boolean;

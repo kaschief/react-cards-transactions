@@ -1,21 +1,81 @@
 import React, { useEffect } from "react";
-import "./styles.css";
+import { StyleSheet, css } from "aphrodite";
 
 import { actionCreators, AppDispatch } from "./state/index";
 import { bindActionCreators } from "redux";
 import { useAppDispatch, useAppSelector } from "./state/hooks";
 import { cards } from "./ApiClient/data/cards";
 import { transactions } from "./ApiClient/data/transactions";
+import { CardFC } from "./components/CardFC";
+import { TransactionFC } from "./components/TransactionFC";
 
-export default function App() {
-  const cardsFromState = useAppSelector((state) => state.cards);
-  const transactionsFromState = useAppSelector((state) => state.transactions);
+const styles = StyleSheet.create({
+  wrapper: {
+    display: "grid",
+    maxWidth: "80vw",
+    gridTemplateAreas: `
+    "title"
+    "cards"
+    "input"
+    "transactions"
+  `,
+    gridTemplateColumns: "1fr",
+    gridTemplateRows: `
+    minmax(15px, auto)
+    auto
+    auto
+    1fr
+    `,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
+    padding: "30px",
+    margin: "0 auto",
+  },
+  title: {
+    gridArea: "title",
+    width: "100%",
+    textAlign: "center",
+  },
+  cardContainer: {
+    gridArea: "cards",
+    width: "100%",
+    justifyContent: "space-evenly",
+    display: "flex",
+    flexDirection: "row",
+    overflowX: "auto",
+  },
+  inputContainer: {
+    gridArea: "input",
+    width: "60%",
+    margin: "0 auto 20px",
+    border: "1px solid grey",
+    padding: "20px",
+    borderRadius: "5px",
+  },
+  transactionsContainer: {
+    gridArea: "transactions",
+    display: "flex",
+    flexDirection: "column",
+    width: "60%",
+    margin: "0 auto 20px",
+    borderRadius: "5px",
+  },
+});
+
+export const App: React.FC = (): JSX.Element => {
+  const cardsState = useAppSelector((state) => state.customerCards);
+  const transactionsState = useAppSelector(
+    (state) => state.customerTransactions
+  );
+  const { customerCards } = cardsState;
+  const { activeTransactionsID, filterTerm, filteredTransactions } =
+    transactionsState;
 
   const dispatch: AppDispatch = useAppDispatch();
   const {
     setCards,
-    selectCard,
-    setActiveTransactionsId,
     setTransactions,
     setFilterTerm,
     setIsFiltered,
@@ -38,70 +98,43 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Cards & Transactions</h1>
+      <div className={css(styles.wrapper)}>
+        <h1 className={css(styles.title)}>Cards & Transactions</h1>
 
-      {cardsFromState.cards.map(
-        (
-          card
-        ): React.DetailedHTMLProps<
-          React.HTMLAttributes<HTMLDivElement>,
-          HTMLDivElement
-        > => {
-          return (
-            <div
-              style={{ cursor: "pointer", margin: "20px" }}
-              onClick={(event) => {
-                if (card.id === transactionsFromState.activeTransactionsID)
-                  return;
-                selectCard(card.id);
-                setActiveTransactionsId(card.id);
-                setIsFiltered(false);
-                getFilteredTransactions();
-                setFilterTerm("");
-              }}
-              key={card.id}
-            >
-              {card.id}
-            </div>
-          );
-        }
-      )}
+        <div className={css(styles.cardContainer)}>
+          {customerCards.map(
+            (
+              card
+            ): React.DetailedHTMLProps<
+              React.HTMLAttributes<HTMLDivElement>,
+              HTMLDivElement
+            > => {
+              return <CardFC key={card.id} card={card} />;
+            }
+          )}
+        </div>
 
-      {transactionsFromState.activeTransactionsID && (
-        <input
-          type="text"
-          name="input"
-          value={transactionsFromState.filterTerm}
-          onChange={handleChange}
-        />
-      )}
+        {activeTransactionsID && (
+          <input
+            className={css(styles.inputContainer)}
+            type="text"
+            name="input"
+            value={filterTerm}
+            defaultValue="Filter"
+            onChange={handleChange}
+          />
+        )}
 
-      {transactionsFromState.filteredTransactions.map(
-        (transaction): JSX.Element => {
-          let { id, amount, description } = transaction;
-          return (
-            <div
-              key={id}
-              style={{
-                display: "flex",
-                margin: "0 auto",
-                width: "100%",
-                justifyContent: "center",
-              }}
-            >
-              <p style={{ alignSelf: "center", margin: "0 auto" }}>
-                Transaction: {id}
-              </p>
-              <p style={{ alignSelf: "center", margin: "0 auto" }}>
-                Amount: {amount}
-              </p>
-              <p style={{ alignSelf: "center", margin: "0 auto" }}>
-                Description: {description}
-              </p>
-            </div>
-          );
-        }
-      )}
+        <div className={css(styles.transactionsContainer)}>
+          {filteredTransactions.map((transaction): JSX.Element => {
+            return (
+              <TransactionFC key={transaction.id} transaction={transaction} />
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default App;

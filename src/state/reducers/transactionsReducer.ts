@@ -1,7 +1,7 @@
 import { TransactionsState, ActionType, Action } from "../../types.d";
 
 const initialState: TransactionsState = {
-  transactions: {},
+  customerTransactions: {},
   activeTransactionsID: "",
   filteredTransactions: [],
   isFiltered: false,
@@ -16,10 +16,10 @@ const reducer = (
     case ActionType.SET_TRANSACTIONS:
       return {
         ...state,
-        transactions: action.payload,
+        customerTransactions: action.payload,
       };
     case ActionType.SET_ACTIVE_TRANSACTIONS_ID:
-      let isValidID = state.transactions.hasOwnProperty(action.payload);
+      let isValidID = state.customerTransactions.hasOwnProperty(action.payload);
       return {
         ...state,
         activeTransactionsID: isValidID
@@ -37,15 +37,19 @@ const reducer = (
         isFiltered: action.payload,
       };
     case ActionType.GET_FILTERED_TRANSACTIONS:
-      let { isFiltered, transactions, activeTransactionsID, filterTerm } =
-        state;
+      let {
+        isFiltered,
+        customerTransactions,
+        activeTransactionsID,
+        filterTerm,
+      } = state;
 
       let filteredTransactions = isFiltered
-        ? transactions[activeTransactionsID].filter((t) => {
+        ? customerTransactions[activeTransactionsID].filter((t) => {
             let description = t.description.toLowerCase();
             return description.includes(filterTerm.toLowerCase());
           })
-        : transactions[activeTransactionsID];
+        : customerTransactions[activeTransactionsID];
       return {
         ...state,
         filteredTransactions,
