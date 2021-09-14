@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     borderRadius: "5px",
     backgroundColor: "#D7D7DB",
     ":hover": {
-      transform: "scale(1.02)",
+      transform: "scale(1.005)",
     },
   },
   details: {
