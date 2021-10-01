@@ -18,14 +18,18 @@ const reducer = (
         ...state,
         customerTransactions: action.payload,
       };
-    case ActionType.SET_ACTIVE_TRANSACTIONS_ID:
-      let isValidID = state.customerTransactions.hasOwnProperty(action.payload);
+    case ActionType.SET_ACTIVE_TRANSACTIONS_ID: {
+      const isValidID = Object.prototype.hasOwnProperty.call(
+        state.customerTransactions,
+        action.payload
+      );
       return {
         ...state,
         activeTransactionsID: isValidID
           ? action.payload
           : state.activeTransactionsID,
       };
+    }
     case ActionType.SET_FILTER_TERM:
       return {
         ...state,
@@ -36,18 +40,18 @@ const reducer = (
         ...state,
         isFiltered: action.payload,
       };
-    case ActionType.GET_FILTERED_TRANSACTIONS:
-      let {
+    case ActionType.GET_FILTERED_TRANSACTIONS: {
+      const {
         isFiltered,
         customerTransactions,
         activeTransactionsID,
         filterTerm,
       } = state;
 
-      let filteredTransactions = isFiltered
+      const filteredTransactions = isFiltered
         ? customerTransactions[activeTransactionsID].filter((t) => {
-            let description = t.description.toLowerCase();
-            let amount = t.amount.toString();
+            const description = t.description.toLowerCase();
+            const amount = t.amount.toString();
             return (
               description.includes(filterTerm.toLowerCase()) ||
               amount.includes(filterTerm.toLowerCase())
@@ -58,6 +62,7 @@ const reducer = (
         ...state,
         filteredTransactions,
       };
+    }
     default:
       return state;
   }

@@ -1,6 +1,6 @@
 import React from "react";
-import { TransactionProps } from "../types";
 import { StyleSheet, css } from "aphrodite";
+import { TransactionProps } from "../types";
 
 const styles = StyleSheet.create({
   transaction: {
